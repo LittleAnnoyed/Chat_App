@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Chat_App</string>
+
+    //Error message
+    <string name="unknown_error">Unknown Error occurred</string>
+
+    //LoginScreen
+    <string name="login">"Login</string>
+    <string name="login_communicat">Please sign in to continue</string>
+
+    <string name="login_email">Email</string>
+    <string name="password">Password</string>
+
+    <string name="move_to_register_screen_first_part">If you don\'t have account\t</string>
+    <string name="move_to_register_screen_second_part">Sign Up</string>
+
+    <string name="password_show">Show Password</string>
+    <string name="password_hide">Hide Password</string>
+
+    <string name="login_wrong_message">Wrong email or password</string>
+
+
+    //RegisterScreen
+    <string name="create_acc">Create Account</string>
+
+    <string name="register">Register</string>
+
+    <string name="move_to_login_screen_first_part">Already have account ?\t</string>
+    <string name="move_to_login_screen_second_part">Sign In</string>
+
+    <string name="acc_exist_message">Account with this email already exists</string>
+
+</resources>
