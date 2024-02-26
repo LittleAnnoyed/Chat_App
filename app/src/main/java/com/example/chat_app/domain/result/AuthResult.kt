@@ -1,4 +1,4 @@
-package com.example.chat_app.domain.model
+package com.example.chat_app.domain.result
 
 sealed class AuthResult<T>(val data: T? = null){
 

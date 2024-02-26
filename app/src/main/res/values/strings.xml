@@ -30,4 +30,9 @@
 
     <string name="acc_exist_message">Account with this email already exists</string>
 
+
+    //Home Screen
+    <string name="chats">Chats</string>
+    <string name="empty_chat_list_message">Looks like you don\'t have any chats</string>
+
 </resources>

@@ -18,7 +18,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.example.chat_app.ui.FontSize
 import com.example.chat_app.ui.LocalFontSize
+import com.example.chat_app.ui.LocalSizes
 import com.example.chat_app.ui.LocalSpacing
+import com.example.chat_app.ui.Sizes
 import com.example.chat_app.ui.Spacing
 
 private val DarkColorScheme = darkColorScheme(
@@ -77,7 +79,8 @@ fun Chat_AppTheme(
 
     CompositionLocalProvider(
         LocalSpacing provides Spacing(),
-        LocalFontSize provides FontSize()
+        LocalFontSize provides FontSize(),
+        LocalSizes provides Sizes()
     ) {
         MaterialTheme(
             colorScheme = colorScheme,

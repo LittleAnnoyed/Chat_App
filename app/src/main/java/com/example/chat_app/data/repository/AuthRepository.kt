@@ -3,7 +3,7 @@ package com.example.chat_app.data.repository
 import android.content.SharedPreferences
 import com.example.chat_app.data.remote.AuthApi
 import com.example.chat_app.data.dto.AuthDto
-import com.example.chat_app.domain.model.AuthResult
+import com.example.chat_app.domain.result.AuthResult
 import com.example.chat_app.util.Constants.JWT_TOKEN
 import com.example.chat_app.util.Constants.USER_ID
 import retrofit2.HttpException

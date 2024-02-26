@@ -26,7 +26,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chat_app.R
-import com.example.chat_app.domain.model.AuthResult
+import com.example.chat_app.domain.result.AuthResult
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.nav.Screen
