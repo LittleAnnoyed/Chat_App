@@ -31,7 +31,7 @@ class GetUserChatsPagingSource(private val userRepo: UserRepository): PagingSour
     }
 }
 
-class GetUsersListPagingSource(private val userRepo: UserRepository) : PagingSource<Int,UserListItem>(){
+class GetUsersListPagingSource(private val userRepo: UserRepository,private val keyword: String) : PagingSource<Int,UserListItem>(){
     override fun getRefreshKey(state: PagingState<Int, UserListItem>): Int? {
         return state.anchorPosition?.let { position ->
             val page = state.closestPageToPosition(position)
@@ -42,7 +42,7 @@ class GetUsersListPagingSource(private val userRepo: UserRepository) : PagingSou
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserListItem> {
         return try {
             val page = params.key ?: 1
-            val response = userRepo.getUsersList(page, PAGE_SIZE)
+            val response = userRepo.getUsersList(keyword,page, PAGE_SIZE)
             LoadResult.Page(
                 data = response,
                 prevKey = null,

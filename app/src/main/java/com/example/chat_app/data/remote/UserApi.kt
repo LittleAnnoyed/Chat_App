@@ -18,6 +18,7 @@ interface UserApi {
 
     @GET("/users")
     suspend fun getUsers(
+        @Path(value = "keyword") keyword: String,
         @Path(value = "page") page: Int,
         @Path(value = "pageSize") pageSize: Int
     ): List<UserListItemDto>

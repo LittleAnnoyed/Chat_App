@@ -6,5 +6,6 @@ sealed class Screen(val route: String) {
     data object RegisterScreen: Screen("register_screen")
 
     data object HomeScreen: Screen("home_screen")
+    data object FindUserScreen: Screen("find_user_screen")
 
 }

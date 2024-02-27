@@ -1,6 +1,7 @@
 package com.example.chat_app.presentation.find
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +30,7 @@ import androidx.paging.compose.itemKey
 import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
 import com.example.chat_app.domain.user.UserListItem
+import com.example.chat_app.nav.Screen
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
@@ -68,23 +70,23 @@ fun FindUserScreen(
 
         Column {
 
-            SearchBar()
+            SearchBar(viewModel)
 
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
-            UsersList(users)
+            UsersList(users,navController)
         }
     }
 
 }
 
 @Composable
-fun SearchBar() {
+fun SearchBar(viewModel: FindUserViewModel) {
 
     //Todo add content desc
     TextField(
-        value = "",
-        onValueChange = {},
+        value = viewModel.state.keyword,
+        onValueChange = { viewModel.onEvent(FindUserEvent.OnSearchBarTextChanged(it)) },
         leadingIcon = {
             Icon(
                 painter = painterResource(id = R.drawable.search),
@@ -103,7 +105,7 @@ fun SearchBar() {
 }
 
 @Composable
-fun UsersList(users: LazyPagingItems<UserListItem>) {
+fun UsersList(users: LazyPagingItems<UserListItem>, navController: NavController) {
 
     LazyColumn(Modifier.fillMaxSize()) {
         items(
@@ -114,7 +116,7 @@ fun UsersList(users: LazyPagingItems<UserListItem>) {
             val user = users[index]
 
             user?.let {
-                UserListItemComponent(user)
+                UserListItemComponent(user,navController)
             }
 
         }
@@ -123,12 +125,13 @@ fun UsersList(users: LazyPagingItems<UserListItem>) {
 
 //todo add content desc
 @Composable
-fun UserListItemComponent(user: UserListItem) {
+fun UserListItemComponent(user: UserListItem,navController: NavController) {
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.small)
+            .clickable {  }
     ) {
 
         RoundImage(

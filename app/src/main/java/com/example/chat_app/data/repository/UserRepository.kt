@@ -30,9 +30,9 @@ class UserRepository(
         return userChats
     }
 
-    suspend fun getUsersList(page: Int, pageSize: Int): List<UserListItem> {
+    suspend fun getUsersList(keyword: String,page: Int, pageSize: Int): List<UserListItem> {
 
-        val userListItemDtos = userApi.getUsers(page,pageSize)
+        val userListItemDtos = userApi.getUsers(keyword,page,pageSize)
 
         val userListItems: ArrayList<UserListItem> = arrayListOf()
 
