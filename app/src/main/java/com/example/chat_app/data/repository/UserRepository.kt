@@ -2,8 +2,10 @@ package com.example.chat_app.data.repository
 
 import android.content.SharedPreferences
 import com.example.chat_app.data.mapper.toChat
+import com.example.chat_app.data.mapper.toUserListItem
 import com.example.chat_app.data.remote.UserApi
 import com.example.chat_app.domain.model.Chat
+import com.example.chat_app.domain.user.UserListItem
 import com.example.chat_app.util.Constants.USER_ID
 
 class UserRepository(
@@ -26,5 +28,19 @@ class UserRepository(
         }
 
         return userChats
+    }
+
+    suspend fun getUsersList(page: Int, pageSize: Int): List<UserListItem> {
+
+        val userListItemDtos = userApi.getUsers(page,pageSize)
+
+        val userListItems: ArrayList<UserListItem> = arrayListOf()
+
+        for (userDto in userListItemDtos){
+            val userListItem = userDto.toUserListItem()
+            userListItems.add(userListItem)
+        }
+
+        return userListItems
     }
 }

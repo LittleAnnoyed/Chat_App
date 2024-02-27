@@ -35,4 +35,7 @@
     <string name="chats">Chats</string>
     <string name="empty_chat_list_message">Looks like you don\'t have any chats</string>
 
+    //Find Screen
+    <string name="find_user">Find User</string>
+
 </resources>

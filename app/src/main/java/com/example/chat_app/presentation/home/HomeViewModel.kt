@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.example.chat_app.data.repository.UserRepository
-import com.example.chat_app.data.source.UserPagingSource
+import com.example.chat_app.data.source.GetUserChatsPagingSource
 import com.example.chat_app.util.Constants.PAGE_SIZE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,7 +20,7 @@ class HomeViewModel @Inject constructor(
     val pager = Pager(
         PagingConfig(pageSize = PAGE_SIZE)
     ) {
-        UserPagingSource(
+        GetUserChatsPagingSource(
             userRepo = userRepo
         )
     }.flow.cachedIn(viewModelScope)

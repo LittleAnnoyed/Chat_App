@@ -5,3 +5,9 @@ data class ChatDto(
     val name: String,
     val chatImageUri: String,
 )
+
+data class UserListItemDto(
+    val id: String,
+    val name: String,
+    val userImageUri: String
+)
