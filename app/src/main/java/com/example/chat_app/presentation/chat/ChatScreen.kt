@@ -1,6 +1,8 @@
 package com.example.chat_app.presentation.chat
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +39,8 @@ fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel()
 ) {
 
+    val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
+
     Scaffold(
         bottomBar = { SendMessageBottomBar()}
     ) {paddingValues ->
@@ -53,6 +57,8 @@ fun ChatScreen(
                     .padding(MaterialTheme.spacing.small)
             ) {
                 Icon(
+                    modifier = Modifier
+                        .clickable { dispatcher.onBackPressed() },
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = stringResource(R.string.back),
                     tint = MaterialTheme.colorScheme.onPrimary
