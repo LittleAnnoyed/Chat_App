@@ -52,6 +52,14 @@ fun RegisterScreen(
                     }
                 }
 
+                is AuthResult.DataNotSet -> {
+                    navController.navigate(Screen.SetDataScreen.route){
+                        popUpTo(Screen.LoginScreen.route){
+                            inclusive = true
+                        }
+                    }
+                }
+
                 is AuthResult.Unauthorized -> {
                     Toast.makeText(
                         context,
