@@ -32,6 +32,7 @@ interface AuthApi {
 
     @GET("/set_user_data")
     suspend fun setUserData(
+        @Part (value = "user_id") userId: String,
         @Part (value = "username") username: String,
         @Part userImageUri: MultipartBody.Part
     )

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Chat_App</string>
 
+
+    <string name="back">Back to previous screen</string>
+
     //Error message
     <string name="unknown_error">Unknown Error occurred</string>
 
@@ -41,6 +44,8 @@
     //Find Screen
     <string name="find_user">Find User</string>
     <string name="username">Username</string>
+    <string name="add_image">add image to message</string>
+    <string name="send_message">Send message</string>
 
 
 </resources>
