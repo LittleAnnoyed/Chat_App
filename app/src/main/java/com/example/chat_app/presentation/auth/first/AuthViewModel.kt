@@ -1,4 +1,4 @@
-package com.example.chat_app.presentation.auth
+package com.example.chat_app.presentation.auth.first
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

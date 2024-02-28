@@ -1,4 +1,4 @@
-package com.example.chat_app.presentation.auth
+package com.example.chat_app.presentation.auth.first
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -31,86 +33,92 @@ import com.example.chat_app.nav.Screen
 
 
 @Composable
-fun RegisterScreen(
-    navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+fun LoginScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController
 ) {
 
     val context = LocalContext.current
 
-    val accExistsMessage = stringResource(id = R.string.acc_exist_message)
-    val errorMessage = stringResource(id = R.string.unknown_error)
+    val loginWrongMessage = stringResource(id = R.string.login_wrong_message)
+    val unknownError = stringResource(id = R.string.unknown_error)
 
-    LaunchedEffect(key1 = authViewModel, key2 = context) {
+    LaunchedEffect(key1 = authViewModel, key2 = context){
         authViewModel.authResults.collect { result ->
-            when (result) {
+            when(result){
                 is AuthResult.Authorized -> {
                     navController.navigate(Screen.HomeScreen.route){
-                        popUpTo(Screen.RegisterScreen.route){
+                        popUpTo(Screen.LoginScreen.route){
+                            inclusive = true
+                        }
+                    }
+                }
+                is AuthResult.DataNotSet -> {
+                    navController.navigate(Screen.SetDataScreen.route){
+                        popUpTo(Screen.LoginScreen.route){
                             inclusive = true
                         }
                     }
                 }
 
                 is AuthResult.Unauthorized -> {
-                    Toast.makeText(
-                        context,
-                        accExistsMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(context,loginWrongMessage,Toast.LENGTH_SHORT).show()
                 }
 
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(
-                        context,
-                        errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(context,unknownError,Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    // Register Screen Ui
+    // Login UI
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
+            .padding(horizontal = MaterialTheme.spacing.large)
+            .background(color = MaterialTheme.colorScheme.background),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
 
         Column(
             modifier = Modifier
-                .padding(horizontal = MaterialTheme.spacing.large)
-                .background(MaterialTheme.colorScheme.background)
-                .weight(1f, true),
+                .fillMaxWidth()
+                .weight(1f, true)
+                .background(color = MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Center
-        )
-        {
+        ) {
             Text(
-                text = stringResource(id = R.string.create_acc),
+                text = stringResource(id = R.string.login),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = MaterialTheme.fontSize.title
+            )
+
+            Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+
+            Text(
+                text = stringResource(id = R.string.login_communicat),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = MaterialTheme.fontSize.itemTitle
             )
 
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
             AuthEmailTextField(
-                value = authViewModel.state.signUpEmail,
-                onValueChanged = { authViewModel.onEvent(AuthEvent.SignUpEmailChanged(it)) },
-            )
+                value = authViewModel.state.signInEmail,
+                onValueChanged = { authViewModel.onEvent(AuthEvent.SignInEmailChanged(it)) })
 
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
             AuthPasswordTextField(
-                value = authViewModel.state.signUpPassword,
-                onValueChanged = { authViewModel.onEvent(AuthEvent.SignUpPasswordChanged(it)) },
-                isPasswordVisible = authViewModel.state.signUpPasswordVisibility,
+                value = authViewModel.state.signInPassword,
+                onValueChanged = { authViewModel.onEvent(AuthEvent.SignInPasswordChanged(it)) },
+                isPasswordVisible = authViewModel.state.signInPasswordVisibility,
                 changePasswordVisibility = {
                     authViewModel.onEvent(
-                        AuthEvent.SignUpPasswordVisibilityChange(
+                        AuthEvent.SignInPasswordVisibility(
                             it
                         )
                     )
@@ -119,29 +127,27 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
-            Button(onClick = {
-                authViewModel.onEvent(AuthEvent.SignUp)
-            }) {
+            Button(onClick = { authViewModel.onEvent(AuthEvent.SignIn) }) {
                 Text(
-                    text = stringResource(id = R.string.register),
+                    text = stringResource(id = R.string.login),
                     color = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
 
+
         Text(
             modifier = Modifier
                 .padding(bottom = MaterialTheme.spacing.large)
-                .clickable { navController.navigate(Screen.LoginScreen.route) },
+                .clickable { navController.navigate(Screen.RegisterScreen.route) },
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
-                    append(stringResource(id = R.string.move_to_login_screen_first_part))
+                    append(stringResource(id = R.string.move_to_register_screen_first_part))
                 }
                 withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                    append(stringResource(id = R.string.move_to_login_screen_second_part))
+                    append(stringResource(id = R.string.move_to_register_screen_second_part))
                 }
             })
 
     }
-
 }

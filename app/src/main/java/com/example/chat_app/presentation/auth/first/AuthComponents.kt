@@ -1,4 +1,4 @@
-package com.example.chat_app.presentation.auth
+package com.example.chat_app.presentation.auth.first
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth

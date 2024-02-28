@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +32,7 @@ import androidx.paging.compose.itemKey
 import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
 import com.example.chat_app.domain.model.Chat
+import com.example.chat_app.nav.Screen
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
@@ -61,6 +66,15 @@ fun HomeScreen(
             )
         }
 
+        FloatingActionButton(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            onClick = { navController.navigate(Screen.FindUserScreen.route) }) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(id = R.string.start_chat)
+            )
+        }
 
     }
 

@@ -2,10 +2,13 @@ package com.example.chat_app.data.remote
 
 import com.example.chat_app.data.dto.AuthDto
 import com.example.chat_app.data.dto.AuthTokenDto
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 
 interface AuthApi {
@@ -27,4 +30,9 @@ interface AuthApi {
     )
 
 
+    @GET("/set_user_data")
+    suspend fun setUserData(
+        @Part (value = "username") username: String,
+        @Part userImageUri: MultipartBody.Part
+    )
 }

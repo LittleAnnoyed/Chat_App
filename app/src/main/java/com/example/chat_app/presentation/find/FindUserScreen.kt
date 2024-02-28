@@ -137,7 +137,7 @@ fun UserListItemComponent(user: UserListItem,navController: NavController) {
         RoundImage(
             modifier = Modifier
                 .size(MaterialTheme.sizes.smallRoundImageSize),
-            imageUri = user.userImageUri
+            imageUri = user.userImageUri ?: ""
         )
 
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))

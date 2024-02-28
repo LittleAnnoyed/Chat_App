@@ -7,5 +7,6 @@ data class AuthDto(
 
 data class AuthTokenDto(
     val token: String,
-    val userId: String
+    val userId: String,
+    val username: String?,
 )
