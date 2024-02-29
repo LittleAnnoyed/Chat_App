@@ -64,7 +64,7 @@ object ChatModule {
 
     @Provides
     @ViewModelScoped
-    fun providesGson() : Gson {
+    fun providesGson(): Gson {
         return Gson()
     }
 
@@ -77,7 +77,7 @@ object ChatModule {
         gson: Gson,
         prefs: SharedPreferences,
     ): ChatRepository {
-        return ChatRepository(api, ws, gson, prefs)
+        return ChatRepository(api, ws, listener, gson, prefs)
     }
 
 }
