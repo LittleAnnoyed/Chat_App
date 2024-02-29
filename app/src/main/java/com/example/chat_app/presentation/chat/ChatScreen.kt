@@ -48,6 +48,7 @@ import com.example.chat_app.ui.spacing
 @Composable
 fun ChatScreen(
     navController: NavController,
+    chatId: String?,
     viewModel: ChatViewModel = hiltViewModel()
 ) {
 

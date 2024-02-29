@@ -13,7 +13,7 @@ class ChatRepository(
 
     suspend fun getChat(chatId: String,page: Int,pageSize: Int): List<Message> {
 
-        val messagesDto = api.getChat(chatId)
+        val messagesDto = api.getChat(chatId,page, pageSize)
         val messages: ArrayList<Message> = arrayListOf()
 
         for (messageDto: MessageDto in messagesDto){
