@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.chat_app.presentation.auth.first.LoginScreen
 import com.example.chat_app.presentation.auth.first.RegisterScreen
+import com.example.chat_app.presentation.chat.ChatScreen
 import com.example.chat_app.presentation.home.HomeScreen
 
 @Composable
@@ -24,6 +25,10 @@ fun MainNavigation(navController: NavHostController) {
         composable(route = Screen.HomeScreen.route){
             HomeScreen(navController = navController)
         }
+        composable(route = Screen.ChatScreen.route){
+            ChatScreen(navController = navController)
+        }
+
     }
 }
 

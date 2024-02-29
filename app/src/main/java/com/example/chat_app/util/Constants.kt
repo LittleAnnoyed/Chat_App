@@ -7,6 +7,8 @@ object Constants {
     const val USER_ID = "user_id"
     const val USERNAME = "username"
 
+    const val TIME_ZONE = "GMT+02:00"
+
     const val IMAGE_JPEG_TYPE = "image/jpeg"
 
     const val PAGE_SIZE = 20
