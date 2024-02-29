@@ -49,6 +49,7 @@
     <string name="create_group">Create Group</string>
     <string name="group_name">Group Name</string>
     <string name="group_image">Group Image</string>
+    <string name="search_bar_text">Search</string>
 
 
 </resources>

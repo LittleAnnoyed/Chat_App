@@ -10,11 +10,13 @@ import com.example.chat_app.util.Constants.USER_ID
 import com.example.chat_app.util.Time
 import com.google.gson.Gson
 import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 
 
 class ChatRepository(
     private val api: ChatApi,
     private val ws: WebSocket,
+    private val listener: WebSocketListener,
     private val gson: Gson,
     private val prefs: SharedPreferences
 ) {
@@ -33,7 +35,7 @@ class ChatRepository(
         return messages
     }
 
-    fun sendMessage(messageText: String) {
+    suspend fun sendMessage(messageText: String) {
         val userId = prefs.getString(USER_ID, null)
         userId?.let {
             val messageCreate = MessageCreate(
@@ -45,5 +47,6 @@ class ChatRepository(
             ws.send(data)
         }
     }
+
 
 }

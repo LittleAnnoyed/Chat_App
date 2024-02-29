@@ -73,8 +73,9 @@ object ChatModule {
     fun providesChatRepository(
         api: ChatApi,
         ws: WebSocket,
+        listener: WebSocketListener,
         gson: Gson,
-        prefs: SharedPreferences
+        prefs: SharedPreferences,
     ): ChatRepository {
         return ChatRepository(api, ws, gson, prefs)
     }
