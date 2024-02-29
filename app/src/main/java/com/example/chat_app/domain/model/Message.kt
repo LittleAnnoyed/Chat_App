@@ -11,7 +11,7 @@ data class Message(
 )
 
 data class MessageCreate(
+    val messageAuthor: String,
     val timestamp: Long,
     val messageText: String,
-    val mediaItemUri: File? = null
 )

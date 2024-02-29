@@ -57,7 +57,7 @@ fun ChatScreen(
 
     Scaffold(
         topBar = { ChatScreenTopBar(dispatcher) },
-        bottomBar = { SendMessageBottomBar() }
+        bottomBar = { SendMessageBottomBar(viewModel) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -160,7 +160,7 @@ fun MessageComponent(message: Message) {
 
 
 @Composable
-fun SendMessageBottomBar() {
+fun SendMessageBottomBar(viewModel: ChatViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -176,10 +176,13 @@ fun SendMessageBottomBar() {
             modifier = Modifier
                 .padding(horizontal = MaterialTheme.spacing.extraSmall)
                 .weight(1f, true),
-            value = "", onValueChange = {})
+            value = viewModel.state.messageText,
+            onValueChange = {viewModel.onEvent(ChatEvent.OnMessageTextChanged(it))})
 
         Icon(
-            modifier = Modifier.padding(end = MaterialTheme.spacing.small),
+            modifier = Modifier
+                .padding(end = MaterialTheme.spacing.small)
+                .clickable { viewModel.onEvent(ChatEvent.OnMessageSend) },
             imageVector = Icons.Default.Send,
             contentDescription = stringResource(id = R.string.send_message)
         )
