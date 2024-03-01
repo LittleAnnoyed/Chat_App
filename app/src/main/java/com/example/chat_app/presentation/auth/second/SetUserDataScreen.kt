@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,6 +31,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.chat_app.R
+import com.example.chat_app.component.RoundImage
+import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.Constants.IMAGE_JPEG_TYPE
 
@@ -61,14 +64,15 @@ fun SetUserDataScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Image(
+        RoundImage(
             modifier = Modifier
+                .size(MaterialTheme.sizes.bigRoundImageSize)
                 .clickable {
                     requestImagePermission(context, activity)
                     pickMedia
                         .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 },
-            painter = rememberAsyncImagePainter(model = viewModel.state.userImageUri),
+            imageUri = viewModel.state.userImageUri,
             contentDescription = stringResource(id = R.string.user_image)
         )
 

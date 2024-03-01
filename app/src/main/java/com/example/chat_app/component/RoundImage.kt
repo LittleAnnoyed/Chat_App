@@ -23,7 +23,7 @@ fun RoundImage(modifier: Modifier, imageUri: String) {
 }
 
 @Composable
-fun RoundImage(modifier: Modifier, imageUri: Uri) {
+fun RoundImage(modifier: Modifier, imageUri: Uri,contentDescription : String? = null) {
     AsyncImage(
         modifier = modifier
             .clip(CircleShape)
