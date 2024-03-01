@@ -50,6 +50,7 @@
     <string name="group_name">Group Name</string>
     <string name="group_image">Group Image</string>
     <string name="search_bar_text">Search</string>
+    <string name="send_media_error">Error occured during sending media</string>
 
 
 </resources>

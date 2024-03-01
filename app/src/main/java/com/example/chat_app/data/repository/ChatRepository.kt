@@ -1,14 +1,19 @@
 package com.example.chat_app.data.repository
 
 import android.content.SharedPreferences
+import android.net.Uri
+import androidx.core.net.toFile
 import com.example.chat_app.data.dto.MessageDto
 import com.example.chat_app.data.mapper.toMessage
 import com.example.chat_app.data.remote.ChatApi
 import com.example.chat_app.domain.model.Message
 import com.example.chat_app.domain.model.MessageCreate
+import com.example.chat_app.domain.result.SendMediaResult
 import com.example.chat_app.util.Constants.USER_ID
 import com.example.chat_app.util.Time
 import com.google.gson.Gson
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 
@@ -46,6 +51,28 @@ class ChatRepository(
             val data = gson.toJson(messageCreate)
             ws.send(data)
         }
+    }
+
+    suspend fun sendMediaItem(chatId: String, mediaItemUri: Uri): SendMediaResult {
+        return try {
+            val mediaItem = mediaItemUri.toFile()
+            api.sendMediaItem(
+                chatId = chatId,
+                mediaItem = MultipartBody.Part.createFormData(
+                    "mediaItem",
+                    mediaItem.name,
+                    mediaItem.asRequestBody()
+                )
+            )
+
+            SendMediaResult.SendCorrectly
+
+        } catch (e: Exception) {
+
+            SendMediaResult.UnknownError
+
+        }
+
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.chat_app.presentation.chat
 
+import android.widget.Toast
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
@@ -26,8 +27,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,6 +43,7 @@ import androidx.paging.compose.itemKey
 import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
 import com.example.chat_app.domain.model.Message
+import com.example.chat_app.domain.result.SendMediaResult
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
@@ -52,8 +56,23 @@ fun ChatScreen(
     viewModel: ChatViewModel = hiltViewModel()
 ) {
 
+    val context = LocalContext.current
+
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
     val messages = viewModel.pager.collectAsLazyPagingItems()
+
+    val sendMediaError = stringResource(id = R.string.send_media_error)
+
+    LaunchedEffect(viewModel, context) {
+        viewModel.sendChannel.collect { result ->
+            when (result) {
+                is SendMediaResult.SendCorrectly -> {}
+                is SendMediaResult.UnknownError -> {
+                    Toast.makeText(context, sendMediaError, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = { ChatScreenTopBar(dispatcher) },
@@ -177,7 +196,7 @@ fun SendMessageBottomBar(viewModel: ChatViewModel) {
                 .padding(horizontal = MaterialTheme.spacing.extraSmall)
                 .weight(1f, true),
             value = viewModel.state.messageText,
-            onValueChange = {viewModel.onEvent(ChatEvent.OnMessageTextChanged(it))})
+            onValueChange = { viewModel.onEvent(ChatEvent.OnMessageTextChanged(it)) })
 
         Icon(
             modifier = Modifier
