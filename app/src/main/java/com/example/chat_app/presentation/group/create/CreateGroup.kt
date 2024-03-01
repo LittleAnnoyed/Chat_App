@@ -1,4 +1,4 @@
-package com.example.chat_app.presentation.group.add
+package com.example.chat_app.presentation.group.create
 
 import android.app.Activity
 import android.net.Uri
@@ -51,9 +51,9 @@ import com.example.chat_app.util.Constants
 
 
 @Composable
-fun ToGroupScreen(
+fun CreateGroupScreen(
     navController: NavController,
-    viewModel: ToGroupViewModel = hiltViewModel()
+    viewModel: CreateGroupViewModel = hiltViewModel()
 ) {
 
     val users = viewModel.pager.collectAsLazyPagingItems()
@@ -112,7 +112,7 @@ fun ToGroupScreen(
 }
 
 @Composable
-fun ToGroupTopBar(viewModel: ToGroupViewModel) {
+fun ToGroupTopBar(viewModel: CreateGroupViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -147,7 +147,7 @@ fun ToGroupTopBar(viewModel: ToGroupViewModel) {
 }
 
 @Composable
-fun UserAddComponent(user: UserListItem, viewModel: ToGroupViewModel) {
+fun UserAddComponent(user: UserListItem, viewModel: CreateGroupViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,7 +188,7 @@ fun UserAddComponent(user: UserListItem, viewModel: ToGroupViewModel) {
 }
 
 @Composable
-fun ToGroupFab(viewModel: ToGroupViewModel, navController: NavController) {
+fun ToGroupFab(viewModel: CreateGroupViewModel, navController: NavController) {
     FloatingActionButton(
         contentColor = MaterialTheme.colorScheme.onPrimary,
         containerColor = MaterialTheme.colorScheme.primary,
@@ -207,7 +207,7 @@ fun ToGroupFab(viewModel: ToGroupViewModel, navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateGroupDialog(
-    viewModel: ToGroupViewModel,
+    viewModel: CreateGroupViewModel,
     pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>
 ) {
     AlertDialog(

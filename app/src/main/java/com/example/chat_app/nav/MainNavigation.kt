@@ -7,8 +7,10 @@ import androidx.navigation.compose.composable
 import com.example.chat_app.presentation.auth.first.LoginScreen
 import com.example.chat_app.presentation.auth.first.RegisterScreen
 import com.example.chat_app.presentation.chat.ChatScreen
-import com.example.chat_app.presentation.group.add.ToGroupScreen
+import com.example.chat_app.presentation.find.FindUserScreen
+import com.example.chat_app.presentation.group.create.CreateGroupScreen
 import com.example.chat_app.presentation.home.HomeScreen
+import com.example.chat_app.util.Constants.CHAT_ID
 
 @Composable
 fun MainNavigation(navController: NavHostController) {
@@ -16,23 +18,28 @@ fun MainNavigation(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = Screen.LoginScreen.route
-    ){
-        composable(route = Screen.LoginScreen.route){
+    ) {
+        composable(route = Screen.LoginScreen.route) {
             LoginScreen(navController = navController)
         }
-        composable(route = Screen.RegisterScreen.route){
+        composable(route = Screen.RegisterScreen.route) {
             RegisterScreen(navController = navController)
         }
-        composable(route = Screen.HomeScreen.route){
+        composable(route = Screen.HomeScreen.route) {
             HomeScreen(navController = navController)
         }
-        composable(route = Screen.ChatScreen.route){
-            ChatScreen(navController = navController)
+        composable(route = "${Screen.ChatScreen.route}/{${CHAT_ID}") { backStackEntry ->
+            ChatScreen(
+                navController = navController,
+                chatId = backStackEntry.arguments!!.getString(CHAT_ID)
+            )
         }
-        composable(route = Screen.AddToGroupScreen.route){
-            ToGroupScreen(navController = navController,)
+        composable(route = Screen.AddToGroupScreen.route) {
+            CreateGroupScreen(navController = navController)
         }
-
+        composable(route = Screen.FindUserScreen.route) {
+            FindUserScreen(navController = navController)
+        }
     }
 }
 
