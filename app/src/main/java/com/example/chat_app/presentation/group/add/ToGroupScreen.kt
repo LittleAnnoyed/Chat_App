@@ -1,6 +1,13 @@
 package com.example.chat_app.presentation.group.add
 
+import android.app.Activity
+import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,9 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +34,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -35,6 +47,7 @@ import com.example.chat_app.domain.user.UserListItem
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
+import com.example.chat_app.util.Constants
 
 
 @Composable
@@ -45,19 +58,36 @@ fun ToGroupScreen(
 
     val users = viewModel.pager.collectAsLazyPagingItems()
 
+    val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+    val contentResolver = activity.contentResolver
+    val dataType = contentResolver.getType(viewModel.state.groupImageUri)
+
+    val pickMedia = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (dataType == Constants.IMAGE_JPEG_TYPE)
+            uri?.let {
+                viewModel.state = viewModel.state.copy(groupImageUri = uri)
+            }
+    }
+
     Scaffold(
         topBar = { ToGroupTopBar(viewModel) },
-        floatingActionButton = { ToGroupFab(viewModel = viewModel) }
+        floatingActionButton = { ToGroupFab(viewModel, navController) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.Start,
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
 
-            LazyColumn() {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
                 items(
                     count = users.itemCount,
                     key = users.itemKey { it.id }
@@ -70,6 +100,10 @@ fun ToGroupScreen(
                     }
 
                 }
+            }
+
+            if (viewModel.state.createGroupAlertDialog) {
+                CreateGroupDialog(viewModel, pickMedia)
             }
 
         }
@@ -154,14 +188,73 @@ fun UserAddComponent(user: UserListItem, viewModel: ToGroupViewModel) {
 }
 
 @Composable
-fun ToGroupFab(viewModel: ToGroupViewModel) {
+fun ToGroupFab(viewModel: ToGroupViewModel, navController: NavController) {
     FloatingActionButton(
         contentColor = MaterialTheme.colorScheme.onPrimary,
         containerColor = MaterialTheme.colorScheme.primary,
         onClick = { viewModel.onEvent(ToGroupEvent.CreateGroup) }) {
         Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = stringResource(id = R.string.create_group)
+            modifier = Modifier
+                .clickable {
+                    viewModel.onEvent(ToGroupEvent.OpenCreateGroupDialog)
+                },
+            imageVector = Icons.Default.Create,
+            contentDescription = stringResource(id = R.string.group_create)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CreateGroupDialog(
+    viewModel: ToGroupViewModel,
+    pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>
+) {
+    AlertDialog(
+        modifier = Modifier
+            .fillMaxSize(0.8f),
+        onDismissRequest = { viewModel.onEvent(ToGroupEvent.CloseCreateGroupDialog) }) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            RoundImage(
+                modifier = Modifier
+                    .size(MaterialTheme.sizes.bigRoundImageSize)
+                    .clickable {
+                        pickMedia
+                            .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    },
+                imageUri = viewModel.state.groupImageUri
+            )
+
+            Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
+
+            TextField(
+                value = viewModel.state.groupName,
+                onValueChange = { viewModel.onEvent(ToGroupEvent.OnGroupNameChanged(it)) },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.group_name),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                },
+                textStyle = TextStyle(
+                    fontSize = MaterialTheme.fontSize.itemTitle
+                ),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onSecondary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSecondary,
+                    focusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.tertiaryContainer
+                )
+            )
+
+            Button(onClick = { viewModel.onEvent(ToGroupEvent.CreateGroup) }) {
+                Text(text = stringResource(id = R.string.group_create))
+            }
+
+        }
     }
 }

@@ -46,7 +46,7 @@
     <string name="username">Username</string>
     <string name="add_image">add image to message</string>
     <string name="send_message">Send message</string>
-    <string name="create_group">Create Group</string>
+    <string name="group_create">Create Group</string>
     <string name="group_name">Group Name</string>
     <string name="group_image">Group Image</string>
     <string name="search_bar_text">Search</string>

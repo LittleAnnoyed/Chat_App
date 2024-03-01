@@ -9,7 +9,8 @@ import androidx.compose.ui.unit.dp
 
 data class Sizes(
     val toolbarHeight: Dp = 64.dp,
-    val smallRoundImageSize: Dp = 32.dp
+    val smallRoundImageSize: Dp = 32.dp,
+    val bigRoundImageSize: Dp = 128.dp
 )
 
 val LocalSizes = compositionLocalOf { Sizes() }

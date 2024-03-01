@@ -84,7 +84,10 @@ class AuthRepository(
         return try {
             val userImageAsFile: File = userImage.toFile()
 
+            val userId = prefs.getString(USER_ID,null)
+
             api.setUserData(
+                userId = userId!!,
                 username = username,
                 userImageUri = MultipartBody.Part.createFormData(
                     "userImage",

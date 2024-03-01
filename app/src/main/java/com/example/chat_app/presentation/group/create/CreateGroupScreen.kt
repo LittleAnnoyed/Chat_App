@@ -63,6 +63,7 @@ fun CreateGroupScreen(
             }
     }
 
+
     Scaffold(topBar = { CreateGroupTopBar() }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -86,8 +87,8 @@ fun CreateGroupScreen(
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
             TextField(
-                value = "",
-                onValueChange = {},
+                value = viewModel.state.groupName,
+                onValueChange = { viewModel.onEvent(CreateGroupEvent.OnGroupNameChanged(it)) },
                 label = {
                     Text(
                         text = stringResource(id = R.string.group_name),
@@ -114,7 +115,7 @@ fun CreateGroupScreen(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text(text = stringResource(id = R.string.create_group))
+                Text(text = stringResource(id = R.string.group_create))
             }
         }
     }
@@ -138,9 +139,11 @@ fun CreateGroupTopBar() {
 
         Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
-        Text(text = stringResource(R.string.create_group))
+        Text(text = stringResource(R.string.group_create))
     }
 }
+
+
 
 private fun requestImagePermission(context: Context, activity: Activity) {
     val hasPermission = ContextCompat.checkSelfPermission(
