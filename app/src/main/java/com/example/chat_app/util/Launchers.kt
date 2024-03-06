@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 
 
 @Composable
-fun pickImageLauncher(
+fun pickMediaLauncher(
     dataType: String?,
     setImageUri: (Uri) -> Unit
 ): ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?> {

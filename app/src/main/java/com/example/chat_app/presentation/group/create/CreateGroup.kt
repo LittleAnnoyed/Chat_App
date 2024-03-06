@@ -46,7 +46,7 @@ import com.example.chat_app.domain.user.UserListItem
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
-import com.example.chat_app.util.pickImageLauncher
+import com.example.chat_app.util.pickMediaLauncher
 
 
 @Composable
@@ -61,7 +61,7 @@ fun GroupCreateScreen(
     val contentResolver = activity.contentResolver
     val dataType = contentResolver.getType(viewModel.state.groupImageUri)
 
-    val pickMedia = pickImageLauncher(
+    val pickMedia = pickMediaLauncher(
         dataType = dataType,
         setImageUri = { viewModel.onEvent(GroupCreateEvent.OnGroupCreateImageChanged(it)) })
 

@@ -4,10 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,13 +27,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.rememberAsyncImagePainter
 import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
-import com.example.chat_app.util.Constants.IMAGE_JPEG_TYPE
-import com.example.chat_app.util.pickImageLauncher
+import com.example.chat_app.util.pickMediaLauncher
 
 @Composable
 fun SetUserDataScreen(
@@ -48,7 +44,7 @@ fun SetUserDataScreen(
     val contentResolver = activity.contentResolver
     val dataType = contentResolver.getType(viewModel.state.userImageUri)
 
-    val pickMedia = pickImageLauncher(
+    val pickMedia = pickMediaLauncher(
         dataType = dataType,
         setImageUri = {viewModel.onEvent(SetUserDataEvent.OnUserImageChanged(it))})
 

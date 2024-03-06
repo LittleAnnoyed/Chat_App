@@ -1,8 +1,11 @@
 package com.example.chat_app.presentation.chat
 
+import android.app.Activity
 import android.widget.Toast
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,9 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -47,6 +48,7 @@ import com.example.chat_app.domain.result.SendMediaResult
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
+import com.example.chat_app.util.pickMediaLauncher
 
 
 @Composable
@@ -57,6 +59,10 @@ fun ChatScreen(
 ) {
 
     val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+    val contentResolver = activity.contentResolver
+    val dataType = contentResolver.getType(viewModel.state.mediaItemUri)
+
 
     val dispatcher = LocalOnBackPressedDispatcherOwner.current!!.onBackPressedDispatcher
     val messages = viewModel.pager.collectAsLazyPagingItems()
@@ -76,7 +82,7 @@ fun ChatScreen(
 
     Scaffold(
         topBar = { ChatScreenTopBar(dispatcher) },
-        bottomBar = { SendMessageBottomBar(viewModel) }
+        bottomBar = { SendMessageBottomBar(viewModel, dataType) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -179,7 +185,13 @@ fun MessageComponent(message: Message) {
 
 
 @Composable
-fun SendMessageBottomBar(viewModel: ChatViewModel) {
+fun SendMessageBottomBar(viewModel: ChatViewModel, dataType: String?) {
+
+
+    val pickMedia = pickMediaLauncher(
+        dataType = dataType,
+        setImageUri = { viewModel.onEvent(ChatEvent.SetMediaItem(it)) })
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -189,7 +201,10 @@ fun SendMessageBottomBar(viewModel: ChatViewModel) {
         Icon(
             modifier = Modifier
                 .padding(start = MaterialTheme.spacing.small)
-                .clickable{  },
+                .clickable {
+                    pickMedia
+                        .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+                },
             painter = painterResource(id = R.drawable.image),
             contentDescription = stringResource(R.string.add_image)
         )

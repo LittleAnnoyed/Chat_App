@@ -47,12 +47,16 @@ class ChatViewModel @Inject constructor(
                 state = state.copy(messageText = event.value)
             }
 
+            is ChatEvent.SetMediaItem -> {
+                state = state.copy(mediaItemUri = event.value)
+            }
+
             is ChatEvent.OnMessageSend -> {
                 sendMessage()
             }
 
             is ChatEvent.SendMediaItem -> {
-                sendMediaItem(event.value)
+                sendMediaItem()
             }
         }
     }
@@ -63,9 +67,8 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    private fun sendMediaItem(mediaItemUri: Uri) {
+    private fun sendMediaItem() {
         viewModelScope.launch {
-            state = state.copy(mediaItemUri = mediaItemUri)
             val result = chatRepo.sendMediaItem(chatId, state.mediaItemUri)
             resultChannel.send(result)
         }
@@ -79,6 +82,7 @@ data class ChatState(
 
 sealed class ChatEvent {
     data class OnMessageTextChanged(val value: String) : ChatEvent()
-    data class SendMediaItem(val value: Uri) : ChatEvent()
+    data class SetMediaItem(val value: Uri) : ChatEvent()
+    data object SendMediaItem : ChatEvent()
     data object OnMessageSend : ChatEvent()
 }
