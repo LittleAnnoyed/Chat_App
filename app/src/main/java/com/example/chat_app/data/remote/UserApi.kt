@@ -9,7 +9,7 @@ import retrofit2.http.Path
 
 interface UserApi {
 
-    @GET("/get_chats")
+    @GET("/chats")
     suspend fun getUserChats(
         @Path(value = "userId") userId: String,
         @Path(value = "page") page: Int,
