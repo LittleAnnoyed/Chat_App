@@ -35,6 +35,7 @@ import com.example.chat_app.component.RoundImage
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.Constants.IMAGE_JPEG_TYPE
+import com.example.chat_app.util.pickImageLauncher
 
 @Composable
 fun SetUserDataScreen(
@@ -47,14 +48,9 @@ fun SetUserDataScreen(
     val contentResolver = activity.contentResolver
     val dataType = contentResolver.getType(viewModel.state.userImageUri)
 
-    val pickMedia = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (dataType == IMAGE_JPEG_TYPE)
-            uri?.let {
-                viewModel.state = viewModel.state.copy(userImageUri = uri)
-            }
-    }
+    val pickMedia = pickImageLauncher(
+        dataType = dataType,
+        setImageUri = {viewModel.onEvent(SetUserDataEvent.OnUserImageChanged(it))})
 
     Column(
         modifier = Modifier

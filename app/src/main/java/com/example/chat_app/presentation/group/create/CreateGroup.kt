@@ -3,7 +3,6 @@ package com.example.chat_app.presentation.group.create
 import android.app.Activity
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -47,30 +46,24 @@ import com.example.chat_app.domain.user.UserListItem
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
-import com.example.chat_app.util.Constants
+import com.example.chat_app.util.pickImageLauncher
 
 
 @Composable
-fun CreateGroupScreen(
+fun GroupCreateScreen(
     navController: NavController,
-    viewModel: CreateGroupViewModel = hiltViewModel()
+    viewModel: GroupCreateViewModel = hiltViewModel()
 ) {
 
-    val users = viewModel.pager.collectAsLazyPagingItems()
 
-    val context = LocalContext.current
+
     val activity = LocalContext.current as Activity
     val contentResolver = activity.contentResolver
     val dataType = contentResolver.getType(viewModel.state.groupImageUri)
 
-    val pickMedia = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (dataType == Constants.IMAGE_JPEG_TYPE)
-            uri?.let {
-                viewModel.state = viewModel.state.copy(groupImageUri = uri)
-            }
-    }
+    val pickMedia = pickImageLauncher(
+        dataType = dataType,
+        setImageUri = { viewModel.onEvent(GroupCreateEvent.OnGroupCreateImageChanged(it)) })
 
     Scaffold(
         topBar = { ToGroupTopBar(viewModel) },
@@ -84,10 +77,13 @@ fun CreateGroupScreen(
             verticalArrangement = Arrangement.Center
         ) {
 
+            val users = viewModel.pager.collectAsLazyPagingItems()
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
+
                 items(
                     count = users.itemCount,
                     key = users.itemKey { it.id }
@@ -112,7 +108,7 @@ fun CreateGroupScreen(
 }
 
 @Composable
-fun ToGroupTopBar(viewModel: CreateGroupViewModel) {
+fun ToGroupTopBar(viewModel: GroupCreateViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -135,7 +131,7 @@ fun ToGroupTopBar(viewModel: CreateGroupViewModel) {
                 )
             },
             value = viewModel.state.keyword,
-            onValueChange = { viewModel.onEvent(ToGroupEvent.OnSearchBarTextChanged(it)) },
+            onValueChange = { viewModel.onEvent(GroupCreateEvent.OnSearchBarTextChanged(it)) },
             colors = TextFieldDefaults.colors(
                 focusedTextColor = MaterialTheme.colorScheme.onSecondary,
                 unfocusedTextColor = MaterialTheme.colorScheme.onSecondary,
@@ -147,7 +143,7 @@ fun ToGroupTopBar(viewModel: CreateGroupViewModel) {
 }
 
 @Composable
-fun UserAddComponent(user: UserListItem, viewModel: CreateGroupViewModel) {
+fun UserAddComponent(user: UserListItem, viewModel: GroupCreateViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,26 +173,26 @@ fun UserAddComponent(user: UserListItem, viewModel: CreateGroupViewModel) {
             modifier = Modifier.weight(1f),
             checked = viewModel.state.isChosen,
             onCheckedChange = {
-                viewModel.onEvent(ToGroupEvent.ChangeCheckBoxValue(it))
+                viewModel.onEvent(GroupCreateEvent.ChangeCheckBoxValue(it))
                 if (viewModel.state.isChosen) {
-                    viewModel.onEvent(ToGroupEvent.RemoveFromGroup(user.id))
+                    viewModel.onEvent(GroupCreateEvent.RemoveFromGroupCreate(user.id))
                 } else {
-                    viewModel.onEvent(ToGroupEvent.AddToGroup(user.id))
+                    viewModel.onEvent(GroupCreateEvent.AddGroupCreate(user.id))
                 }
             })
     }
 }
 
 @Composable
-fun ToGroupFab(viewModel: CreateGroupViewModel, navController: NavController) {
+fun ToGroupFab(viewModel: GroupCreateViewModel, navController: NavController) {
     FloatingActionButton(
         contentColor = MaterialTheme.colorScheme.onPrimary,
         containerColor = MaterialTheme.colorScheme.primary,
-        onClick = { viewModel.onEvent(ToGroupEvent.CreateGroup) }) {
+        onClick = { viewModel.onEvent(GroupCreateEvent.CreateGroupCreate) }) {
         Icon(
             modifier = Modifier
                 .clickable {
-                    viewModel.onEvent(ToGroupEvent.OpenCreateGroupDialog)
+                    viewModel.onEvent(GroupCreateEvent.OpenCreateGroupDialogCreate)
                 },
             imageVector = Icons.Default.Create,
             contentDescription = stringResource(id = R.string.group_create)
@@ -207,13 +203,13 @@ fun ToGroupFab(viewModel: CreateGroupViewModel, navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateGroupDialog(
-    viewModel: CreateGroupViewModel,
+    viewModel: GroupCreateViewModel,
     pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>
 ) {
     AlertDialog(
         modifier = Modifier
             .fillMaxSize(0.8f),
-        onDismissRequest = { viewModel.onEvent(ToGroupEvent.CloseCreateGroupDialog) }) {
+        onDismissRequest = { viewModel.onEvent(GroupCreateEvent.CloseCreateGroupDialogCreate) }) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center
@@ -233,7 +229,7 @@ fun CreateGroupDialog(
 
             TextField(
                 value = viewModel.state.groupName,
-                onValueChange = { viewModel.onEvent(ToGroupEvent.OnGroupNameChanged(it)) },
+                onValueChange = { viewModel.onEvent(GroupCreateEvent.OnGroupCreateNameChanged(it)) },
                 label = {
                     Text(
                         text = stringResource(id = R.string.group_name),
@@ -251,7 +247,7 @@ fun CreateGroupDialog(
                 )
             )
 
-            Button(onClick = { viewModel.onEvent(ToGroupEvent.CreateGroup) }) {
+            Button(onClick = { viewModel.onEvent(GroupCreateEvent.CreateGroupCreate) }) {
                 Text(text = stringResource(id = R.string.group_create))
             }
 

@@ -187,7 +187,9 @@ fun SendMessageBottomBar(viewModel: ChatViewModel) {
             .padding(vertical = MaterialTheme.spacing.medium)
     ) {
         Icon(
-            modifier = Modifier.padding(start = MaterialTheme.spacing.small),
+            modifier = Modifier
+                .padding(start = MaterialTheme.spacing.small)
+                .clickable{  },
             painter = painterResource(id = R.drawable.image),
             contentDescription = stringResource(R.string.add_image)
         )

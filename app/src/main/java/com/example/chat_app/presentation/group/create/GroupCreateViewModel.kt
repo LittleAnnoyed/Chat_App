@@ -22,12 +22,12 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class CreateGroupViewModel @Inject constructor(
+class GroupCreateViewModel @Inject constructor(
     private val userRepo: UserRepository,
     private val groupRepo : GroupRepository
 ) : ViewModel() {
 
-    var state by mutableStateOf(ToGroupState())
+    var state by mutableStateOf(GroupCreateState())
 
     private val resultChannel = Channel<CreateResult>()
     val createResult = resultChannel.receiveAsFlow()
@@ -38,37 +38,41 @@ class CreateGroupViewModel @Inject constructor(
         GetUsersListPagingSource(userRepo = userRepo, keyword = state.keyword)
     }.flow
 
-    fun onEvent(event: ToGroupEvent) {
+    fun onEvent(event: GroupCreateEvent) {
         when (event) {
-            is ToGroupEvent.OnSearchBarTextChanged -> {
+            is GroupCreateEvent.OnSearchBarTextChanged -> {
                 state = state.copy(keyword = event.value)
             }
 
-            is ToGroupEvent.ChangeCheckBoxValue -> {
+            is GroupCreateEvent.ChangeCheckBoxValue -> {
                 changeCheckBoxValue()
             }
 
-            is ToGroupEvent.AddToGroup -> {
+            is GroupCreateEvent.AddGroupCreate -> {
                 addUserToGroup(event.value)
             }
 
-            is ToGroupEvent.RemoveFromGroup -> {
+            is GroupCreateEvent.RemoveFromGroupCreate -> {
                 removeUserFromGroup(event.value)
             }
 
-            is ToGroupEvent.OpenCreateGroupDialog -> {
+            is GroupCreateEvent.OpenCreateGroupDialogCreate -> {
                 state = state.copy(createGroupAlertDialog = true)
             }
 
-            is ToGroupEvent.CloseCreateGroupDialog -> {
+            is GroupCreateEvent.CloseCreateGroupDialogCreate -> {
                 state = state.copy(createGroupAlertDialog = false)
             }
 
-            is ToGroupEvent.OnGroupNameChanged -> {
+            is GroupCreateEvent.OnGroupCreateNameChanged -> {
                 state = state.copy(groupName = event.value)
             }
 
-            is ToGroupEvent.CreateGroup -> {
+            is GroupCreateEvent.OnGroupCreateImageChanged -> {
+                state = state.copy(groupImageUri = event.value)
+            }
+
+            is GroupCreateEvent.CreateGroupCreate -> {
                 createGroup()
             }
         }
@@ -103,7 +107,7 @@ class CreateGroupViewModel @Inject constructor(
 
 }
 
-data class ToGroupState(
+data class GroupCreateState(
     val keyword: String = "",
     val isChosen: Boolean = false,
     val groupMembers: ArrayList<String> = arrayListOf(),
@@ -112,13 +116,14 @@ data class ToGroupState(
     val createGroupAlertDialog: Boolean = false
 )
 
-sealed class ToGroupEvent {
-    data class OnSearchBarTextChanged(val value: String) : ToGroupEvent()
-    data class AddToGroup(val value: String) : ToGroupEvent()
-    data class RemoveFromGroup(val value: String) : ToGroupEvent()
-    data class ChangeCheckBoxValue(val value: Boolean) : ToGroupEvent()
-    data class OnGroupNameChanged(val value: String) : ToGroupEvent()
-    data object OpenCreateGroupDialog : ToGroupEvent()
-    data object CloseCreateGroupDialog : ToGroupEvent()
-    data object CreateGroup : ToGroupEvent()
+sealed class GroupCreateEvent {
+    data class OnSearchBarTextChanged(val value: String) : GroupCreateEvent()
+    data class AddGroupCreate(val value: String) : GroupCreateEvent()
+    data class RemoveFromGroupCreate(val value: String) : GroupCreateEvent()
+    data class ChangeCheckBoxValue(val value: Boolean) : GroupCreateEvent()
+    data class OnGroupCreateNameChanged(val value: String) : GroupCreateEvent()
+    data class OnGroupCreateImageChanged(val value: Uri) : GroupCreateEvent()
+    data object OpenCreateGroupDialogCreate : GroupCreateEvent()
+    data object CloseCreateGroupDialogCreate : GroupCreateEvent()
+    data object CreateGroupCreate : GroupCreateEvent()
 }

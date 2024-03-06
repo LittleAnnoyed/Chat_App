@@ -8,7 +8,7 @@ import com.example.chat_app.presentation.auth.first.LoginScreen
 import com.example.chat_app.presentation.auth.first.RegisterScreen
 import com.example.chat_app.presentation.chat.ChatScreen
 import com.example.chat_app.presentation.find.FindUserScreen
-import com.example.chat_app.presentation.group.create.CreateGroupScreen
+import com.example.chat_app.presentation.group.create.GroupCreateScreen
 import com.example.chat_app.presentation.home.HomeScreen
 import com.example.chat_app.util.Constants.CHAT_ID
 
@@ -35,7 +35,7 @@ fun MainNavigation(navController: NavHostController) {
             )
         }
         composable(route = Screen.AddToGroupScreen.route) {
-            CreateGroupScreen(navController = navController)
+            GroupCreateScreen(navController = navController)
         }
         composable(route = Screen.FindUserScreen.route) {
             FindUserScreen(navController = navController)

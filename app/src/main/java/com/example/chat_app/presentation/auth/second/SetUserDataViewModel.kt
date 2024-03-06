@@ -24,7 +24,7 @@ class SetUserDataViewModel @Inject constructor(
                 state = state.copy(username = event.value)
             }
             is SetUserDataEvent.OnUserImageChanged -> {
-                state = state.copy(userImage = event.value)
+                state = state.copy(userImageUri = event.value)
             }
         }
     }
@@ -34,11 +34,10 @@ class SetUserDataViewModel @Inject constructor(
 data class SetUserDataState(
     val username: String = "",
     val userImageUri: Uri = Uri.EMPTY,
-    val userImage: Bitmap? = null
 )
 
 sealed class SetUserDataEvent {
 
     data class OnUsernameChanged(val value: String): SetUserDataEvent()
-    data class OnUserImageChanged(val value: Bitmap): SetUserDataEvent()
+    data class OnUserImageChanged(val value: Uri): SetUserDataEvent()
 }
