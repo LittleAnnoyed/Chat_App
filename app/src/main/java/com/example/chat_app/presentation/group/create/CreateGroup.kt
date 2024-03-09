@@ -1,6 +1,7 @@
 package com.example.chat_app.presentation.group.create
 
 import android.app.Activity
+import android.content.Context
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -47,6 +48,7 @@ import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.pickMediaLauncher
+import com.example.chat_app.util.requestImagePermission
 
 
 @Composable
@@ -56,7 +58,7 @@ fun GroupCreateScreen(
 ) {
 
 
-
+    val context = LocalContext.current
     val activity = LocalContext.current as Activity
     val contentResolver = activity.contentResolver
     val dataType = contentResolver.getType(viewModel.state.groupImageUri)
@@ -99,7 +101,7 @@ fun GroupCreateScreen(
             }
 
             if (viewModel.state.createGroupAlertDialog) {
-                CreateGroupDialog(viewModel, pickMedia)
+                CreateGroupDialog(viewModel, pickMedia, context, activity)
             }
 
         }
@@ -204,7 +206,9 @@ fun ToGroupFab(viewModel: GroupCreateViewModel, navController: NavController) {
 @Composable
 fun CreateGroupDialog(
     viewModel: GroupCreateViewModel,
-    pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>
+    pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri?>,
+    context: Context,
+    activity: Activity
 ) {
     AlertDialog(
         modifier = Modifier
@@ -219,6 +223,7 @@ fun CreateGroupDialog(
                 modifier = Modifier
                     .size(MaterialTheme.sizes.bigRoundImageSize)
                     .clickable {
+                        requestImagePermission(context, activity)
                         pickMedia
                             .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     },

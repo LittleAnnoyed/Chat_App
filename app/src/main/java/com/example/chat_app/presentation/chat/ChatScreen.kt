@@ -1,6 +1,7 @@
 package com.example.chat_app.presentation.chat
 
 import android.app.Activity
+import android.content.Context
 import android.widget.Toast
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -49,6 +50,7 @@ import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.pickMediaLauncher
+import com.example.chat_app.util.requestImagePermission
 
 
 @Composable
@@ -82,7 +84,7 @@ fun ChatScreen(
 
     Scaffold(
         topBar = { ChatScreenTopBar(dispatcher) },
-        bottomBar = { SendMessageBottomBar(viewModel, dataType) }
+        bottomBar = { SendMessageBottomBar(viewModel, dataType, context, activity) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -185,7 +187,11 @@ fun MessageComponent(message: Message) {
 
 
 @Composable
-fun SendMessageBottomBar(viewModel: ChatViewModel, dataType: String?) {
+fun SendMessageBottomBar(
+    viewModel: ChatViewModel,
+    dataType: String?,
+    context: Context,
+    activity: Activity) {
 
 
     val pickMedia = pickMediaLauncher(
@@ -202,6 +208,7 @@ fun SendMessageBottomBar(viewModel: ChatViewModel, dataType: String?) {
             modifier = Modifier
                 .padding(start = MaterialTheme.spacing.small)
                 .clickable {
+                    requestImagePermission(context,activity)
                     pickMedia
                         .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
                 },

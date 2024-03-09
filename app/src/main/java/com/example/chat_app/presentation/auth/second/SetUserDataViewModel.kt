@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.chat_app.data.repository.AuthRepository
+import com.example.chat_app.domain.model.Chat
 import com.example.chat_app.domain.result.SetUserDataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -17,6 +18,7 @@ class SetUserDataViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(SetUserDataState())
+
 
     fun onEvent(event: SetUserDataEvent){
         when(event){

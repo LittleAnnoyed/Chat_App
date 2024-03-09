@@ -32,6 +32,7 @@ import com.example.chat_app.component.RoundImage
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.pickMediaLauncher
+import com.example.chat_app.util.requestImagePermission
 
 @Composable
 fun SetUserDataScreen(
@@ -90,16 +91,3 @@ fun SetUserDataScreen(
     }
 }
 
-private fun requestImagePermission(context: Context, activity: Activity) {
-    val hasPermission = ContextCompat.checkSelfPermission(
-        context,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    ) == PackageManager.PERMISSION_GRANTED
-    if (!hasPermission) {
-        ActivityCompat.requestPermissions(
-            activity,
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            0
-        )
-    }
-}
