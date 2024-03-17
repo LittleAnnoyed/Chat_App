@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.chat_app.data.repository.ChatRepository
+import com.example.chat_app.data.repository.GroupRepository
 import com.example.chat_app.data.source.GetChatPagingSource
 import com.example.chat_app.domain.model.MessageCreate
 import com.example.chat_app.domain.result.SendMediaResult
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val chatRepo: ChatRepository,
+    private val groupRepo: GroupRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -58,6 +60,10 @@ class ChatViewModel @Inject constructor(
             is ChatEvent.SendMediaItem -> {
                 sendMediaItem()
             }
+
+            is ChatEvent.LeaveGroup -> {
+                leaveGroup()
+            }
         }
     }
 
@@ -73,6 +79,13 @@ class ChatViewModel @Inject constructor(
             resultChannel.send(result)
         }
     }
+
+    //todo replace with groupId
+    private fun leaveGroup() {
+        viewModelScope.launch {
+            groupRepo.groupLeave(chatId)
+        }
+    }
 }
 
 data class ChatState(
@@ -85,4 +98,5 @@ sealed class ChatEvent {
     data class SetMediaItem(val value: Uri) : ChatEvent()
     data object SendMediaItem : ChatEvent()
     data object OnMessageSend : ChatEvent()
+    data object LeaveGroup: ChatEvent()
 }

@@ -14,7 +14,13 @@ interface GroupApi {
     suspend fun createGroup(
         @Part groupImage: MultipartBody.Part,
         @Part(value = "name") name: String,
-        @Part(value = "members") members : List<String>
+        @Part(value = "members") members: List<String>
+    )
+
+    @POST("group/leave")
+    suspend fun groupLeave(
+        @Part(value = "userId") userId: String,
+        @Part(value = "groupId") groupId: String
     )
 
 }

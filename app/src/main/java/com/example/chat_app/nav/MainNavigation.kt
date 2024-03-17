@@ -34,7 +34,7 @@ fun MainNavigation(navController: NavHostController) {
                 chatId = backStackEntry.arguments!!.getString(CHAT_ID)
             )
         }
-        composable(route = Screen.AddToGroupScreen.route) {
+        composable(route = Screen.GroupCreateScreen.route) {
             GroupCreateScreen(navController = navController)
         }
         composable(route = Screen.FindUserScreen.route) {

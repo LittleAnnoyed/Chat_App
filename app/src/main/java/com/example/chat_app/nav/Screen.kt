@@ -11,6 +11,6 @@ sealed class Screen(val route: String) {
     data object FindUserScreen: Screen("find_user_screen")
     data object ChatScreen: Screen("chat_screen")
 
-    data object AddToGroupScreen: Screen("add_to_group_screen")
-
+    data object GroupCreateScreen: Screen("group_create_screen")
+    data object GroupAddScreen: Screen("group_add_screen")
 }

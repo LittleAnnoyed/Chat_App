@@ -11,9 +11,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -38,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,6 +49,7 @@ import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
 import com.example.chat_app.domain.model.Message
 import com.example.chat_app.domain.result.SendMediaResult
+import com.example.chat_app.nav.Screen
 import com.example.chat_app.ui.fontSize
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
@@ -83,7 +87,7 @@ fun ChatScreen(
     }
 
     Scaffold(
-        topBar = { ChatScreenTopBar(dispatcher) },
+        topBar = { ChatScreenTopBar(dispatcher, viewModel, navController) },
         bottomBar = { SendMessageBottomBar(viewModel, dataType, context, activity) }
     ) { paddingValues ->
         Column(
@@ -101,36 +105,73 @@ fun ChatScreen(
 
 
 @Composable
-fun ChatScreenTopBar(dispatcher: OnBackPressedDispatcher) {
+fun ChatScreenTopBar(
+    dispatcher: OnBackPressedDispatcher,
+    viewModel: ChatViewModel,
+    navController: NavController
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(MaterialTheme.spacing.small)
+            .padding(MaterialTheme.spacing.small),
+        horizontalArrangement = Arrangement.Absolute.SpaceEvenly
     ) {
-        Icon(
+
+        Row(
             modifier = Modifier
-                .clickable { dispatcher.onBackPressed() },
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = stringResource(R.string.back),
-            tint = MaterialTheme.colorScheme.onPrimary
-        )
+                .fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier
+                    .clickable { dispatcher.onBackPressed() },
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = stringResource(R.string.back),
+                tint = MaterialTheme.colorScheme.onPrimary
+            )
 
-        Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
+            Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
 
-        RoundImage(
-            modifier = Modifier.size(MaterialTheme.sizes.smallRoundImageSize),
-            imageUri = ""
-        )
+            //todo add imageUri
+            RoundImage(
+                modifier = Modifier.size(MaterialTheme.sizes.smallRoundImageSize),
+                imageUri = ""
+            )
 
-        Spacer(modifier = Modifier.padding(start = MaterialTheme.spacing.small))
+            Spacer(modifier = Modifier.padding(start = MaterialTheme.spacing.small))
 
-        Text(
-            text = "",
-            color = MaterialTheme.colorScheme.onPrimary,
-            fontSize = MaterialTheme.fontSize.title,
-            fontWeight = FontWeight.SemiBold
-        )
+            //todo add text
+            Text(
+                text = "",
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontSize = MaterialTheme.fontSize.title,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+
+        //todo Add content desc
+        Row(
+            modifier = Modifier
+                .fillMaxHeight(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier
+                    .clickable { navController.navigate(Screen.GroupAddScreen.route) },
+                painter = painterResource(id = R.drawable.add_user),
+                contentDescription = null
+            )
+
+            Spacer(modifier = Modifier.padding(start = MaterialTheme.spacing.small))
+
+            Icon(
+                modifier = Modifier
+                    .clickable { viewModel.onEvent(ChatEvent.LeaveGroup) },
+                painter = painterResource(id = R.drawable.leave),
+                contentDescription = ""
+            )
+        }
     }
 }
 
@@ -191,7 +232,8 @@ fun SendMessageBottomBar(
     viewModel: ChatViewModel,
     dataType: String?,
     context: Context,
-    activity: Activity) {
+    activity: Activity
+) {
 
 
     val pickMedia = pickMediaLauncher(
@@ -208,7 +250,7 @@ fun SendMessageBottomBar(
             modifier = Modifier
                 .padding(start = MaterialTheme.spacing.small)
                 .clickable {
-                    requestImagePermission(context,activity)
+                    requestImagePermission(context, activity)
                     pickMedia
                         .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
                 },
