@@ -87,11 +87,9 @@ class AuthRepository(
 
     }
 
-    suspend fun setUserData(username: String, userImage: Bitmap): SetUserDataResult<Unit> =
+    suspend fun setUserData(username: String, userImage: File): SetUserDataResult<Unit> =
         withContext(Dispatchers.IO) {
             try {
-                val userImageAsFile: File = userImage.toFile()
-
                 val userId = prefs.getString(USER_ID, null)
 
                 api.setUserData(
@@ -99,8 +97,8 @@ class AuthRepository(
                     username = username,
                     userImageUri = MultipartBody.Part.createFormData(
                         "userImage",
-                        userImageAsFile.name,
-                        userImageAsFile.asRequestBody()
+                        userImage.name,
+                        userImage.asRequestBody()
                     )
                 )
 
