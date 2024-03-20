@@ -7,6 +7,8 @@ import com.example.chat_app.data.remote.GroupApi
 import com.example.chat_app.domain.model.GroupData
 import com.example.chat_app.domain.result.CreateResult
 import com.example.chat_app.util.Constants.USER_ID
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
@@ -21,9 +23,9 @@ class GroupRepository(
         groupName: String,
         groupImage: File,
         groupMembers: List<String>
-    ): CreateResult {
+    ): CreateResult = withContext(Dispatchers.IO) {
 
-        return try {
+        try {
             groupApi.createGroup(
                 groupImage = MultipartBody.Part.createFormData(
                     "groupImage",
@@ -42,8 +44,8 @@ class GroupRepository(
 
     }
 
-    suspend fun groupLeave(groupId: String) {
-        return try {
+    suspend fun groupLeave(groupId: String)  = withContext(Dispatchers.IO){
+        try {
             val userId = prefs.getString(USER_ID, null)
             groupApi.groupLeave(userId!!, groupId)
         } catch (e: Exception) {

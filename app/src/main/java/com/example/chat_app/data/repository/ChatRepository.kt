@@ -12,6 +12,8 @@ import com.example.chat_app.domain.result.SendMediaResult
 import com.example.chat_app.util.Constants.USER_ID
 import com.example.chat_app.util.Time
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.WebSocket
@@ -27,20 +29,20 @@ class ChatRepository(
 ) {
 
 
-    suspend fun getChat(chatId: String, page: Int, pageSize: Int): List<Message> {
+    suspend fun getChat(chatId: String, page: Int, pageSize: Int): List<Message> =
+        withContext(Dispatchers.IO) {
+            val messagesDto = api.getChat(chatId, page, pageSize)
+            val messages: ArrayList<Message> = arrayListOf()
 
-        val messagesDto = api.getChat(chatId, page, pageSize)
-        val messages: ArrayList<Message> = arrayListOf()
+            for (messageDto: MessageDto in messagesDto) {
+                val message = messageDto.toMessage()
+                messages.add(message)
+            }
 
-        for (messageDto: MessageDto in messagesDto) {
-            val message = messageDto.toMessage()
-            messages.add(message)
+            messages
         }
 
-        return messages
-    }
-
-    suspend fun sendMessage(messageText: String) {
+    suspend fun sendMessage(messageText: String)  = withContext(Dispatchers.IO){
         val userId = prefs.getString(USER_ID, null)
         userId?.let {
             val messageCreate = MessageCreate(
@@ -53,8 +55,8 @@ class ChatRepository(
         }
     }
 
-    suspend fun sendMediaItem(chatId: String, mediaItemUri: Uri): SendMediaResult {
-        return try {
+    suspend fun sendMediaItem(chatId: String, mediaItemUri: Uri): SendMediaResult = withContext(Dispatchers.IO) {
+        try {
             val mediaItem = mediaItemUri.toFile()
             api.sendMediaItem(
                 chatId = chatId,
