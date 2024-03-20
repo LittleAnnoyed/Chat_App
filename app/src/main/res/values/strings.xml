@@ -33,6 +33,8 @@
 
     <string name="acc_exist_message">Account with this email already exists</string>
 
+    <string name="send">Send</string>
+
     // UserSetData Screen
     <string name="user_image">User Image</string>
 
