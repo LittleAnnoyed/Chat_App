@@ -155,7 +155,8 @@ fun UserAddComponent(user: UserListItem, viewModel: GroupCreateViewModel) {
             modifier = Modifier
                 .size(MaterialTheme.sizes.smallRoundImageSize)
                 .weight(2f),
-            imageUri = user.userImageUri ?: ""
+            imageUri = user.userImageUri ?: "",
+            contentDescription = stringResource(id = R.string.user_image)
         )
 
         Spacer(
@@ -227,7 +228,8 @@ fun CreateGroupDialog(
                         pickMedia
                             .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                     },
-                imageUri = viewModel.state.groupImageUri
+                imageUri = viewModel.state.groupImageUri,
+                contentDescription = stringResource(id = R.string.group_image)
             )
 
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))

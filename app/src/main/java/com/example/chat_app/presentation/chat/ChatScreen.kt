@@ -136,7 +136,8 @@ fun ChatScreenTopBar(
             //todo add imageUri
             RoundImage(
                 modifier = Modifier.size(MaterialTheme.sizes.smallRoundImageSize),
-                imageUri = ""
+                imageUri = "",
+                contentDescription = stringResource(id = R.string.chat_image)
             )
 
             Spacer(modifier = Modifier.padding(start = MaterialTheme.spacing.small))

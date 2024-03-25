@@ -54,5 +54,7 @@
     <string name="search_bar_text">Search</string>
     <string name="send_media_error">Error occured during sending media</string>
 
+    // Chat Screen
+    <string name="chat_image">Chat room image</string>
 
 </resources>

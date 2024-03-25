@@ -131,13 +131,14 @@ fun UserListItemComponent(user: UserListItem,navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.small)
-            .clickable {  }
+            .clickable { }
     ) {
 
         RoundImage(
             modifier = Modifier
                 .size(MaterialTheme.sizes.smallRoundImageSize),
-            imageUri = user.userImageUri ?: ""
+            imageUri = user.userImageUri ?: "",
+            contentDescription = stringResource(id = R.string.user_image)
         )
 
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))

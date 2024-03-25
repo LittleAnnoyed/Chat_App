@@ -10,25 +10,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
-//Todo add contentDescription
+
 @Composable
-fun RoundImage(modifier: Modifier, imageUri: String) {
+fun RoundImage(modifier: Modifier, imageUri: String, contentDescription: String?) {
     AsyncImage(
         modifier = modifier
             .clip(CircleShape)
             .border(width = 1.dp, color = MaterialTheme.colorScheme.primary, shape = CircleShape),
         model = imageUri,
-        contentDescription = null
+        contentDescription = contentDescription
     )
 }
 
 @Composable
-fun RoundImage(modifier: Modifier, imageUri: Uri,contentDescription : String? = null) {
+fun RoundImage(modifier: Modifier, imageUri: Uri,contentDescription : String?) {
     AsyncImage(
         modifier = modifier
             .clip(CircleShape)
             .border(width = 1.dp, color = MaterialTheme.colorScheme.primary, shape = CircleShape),
         model = imageUri,
-        contentDescription = null
+        contentDescription = contentDescription
     )
 }

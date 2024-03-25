@@ -136,7 +136,8 @@ fun ChatComponent(chat: Chat) {
         RoundImage(
             modifier = Modifier
                 .size(MaterialTheme.sizes.smallRoundImageSize),
-            chat.chatImageUri
+            imageUri = chat.chatImageUri,
+            contentDescription = stringResource(id = R.string.chat_image)
         )
 
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.spacing.small))
