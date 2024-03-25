@@ -8,7 +8,10 @@ import androidx.core.net.toFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chat_app.data.repository.AuthRepository
+import com.example.chat_app.domain.result.SetUserDataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +22,8 @@ class SetUserDataViewModel @Inject constructor(
 
     var state by mutableStateOf(SetUserDataState())
 
+    private val resultChannel = Channel<SetUserDataResult<Unit>>()
+    var authResults = resultChannel.receiveAsFlow()
 
     fun onEvent(event: SetUserDataEvent){
         when(event){
@@ -29,14 +34,15 @@ class SetUserDataViewModel @Inject constructor(
                 state = state.copy(userImageUri = event.value)
             }
             is SetUserDataEvent.SendUserData -> {
-
+                sendUserData()
             }
         }
     }
 
     private fun sendUserData() {
         viewModelScope.launch {
-            authRepo.setUserData(state.username,state.userImageUri.toFile())
+            val result = authRepo.setUserData(state.username,state.userImageUri.toFile())
+            resultChannel.send(result)
         }
     }
 }

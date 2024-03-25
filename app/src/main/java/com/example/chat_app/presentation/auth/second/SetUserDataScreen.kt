@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,10 +33,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
+import com.example.chat_app.domain.result.SetUserDataResult
+import com.example.chat_app.nav.Screen
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.pickMediaLauncher
 import com.example.chat_app.util.requestImagePermission
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun SetUserDataScreen(
@@ -50,6 +55,21 @@ fun SetUserDataScreen(
     val pickMedia = pickMediaLauncher(
         dataType = dataType,
         setImageUri = {viewModel.onEvent(SetUserDataEvent.OnUserImageChanged(it))})
+
+    val unknownError = stringResource(id = R.string.unknown_error)
+
+    LaunchedEffect(viewModel,context){
+        viewModel.authResults.collect{ result ->
+            when(result) {
+                is SetUserDataResult.Correctly -> {
+                    navController.navigate(Screen.HomeScreen.route)
+                }
+                is SetUserDataResult.UnknownError -> {
+                    Toast.makeText(context,unknownError,Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
