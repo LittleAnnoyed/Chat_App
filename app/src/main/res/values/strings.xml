@@ -52,7 +52,7 @@
     <string name="group_name">Group Name</string>
     <string name="group_image">Group Image</string>
     <string name="search_bar_text">Search</string>
-    <string name="send_media_error">Error occured during sending media</string>
+    <string name="send_media_error">Error occurred during sending media</string>
 
     // Chat Screen
     <string name="chat_image">Chat room image</string>
