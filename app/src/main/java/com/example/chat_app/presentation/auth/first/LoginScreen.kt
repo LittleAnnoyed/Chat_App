@@ -131,7 +131,7 @@ fun LoginScreen(
             Button(onClick = {
                 authViewModel.onEvent(AuthEvent.SignInEmailValidate)
 
-                if (authViewModel.state.signInEmailValidate) {
+                if (authViewModel.state.signInEmailValidate && authViewModel.state.signInPasswordLength > 8) {
                     authViewModel.onEvent(AuthEvent.SignIn)
                 }
 

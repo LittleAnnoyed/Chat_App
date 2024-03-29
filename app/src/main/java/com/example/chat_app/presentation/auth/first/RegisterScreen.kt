@@ -129,7 +129,7 @@ fun RegisterScreen(
 
             Button(onClick = {
                 authViewModel.onEvent(AuthEvent.SignUpEmailValidate)
-                if (authViewModel.state.signUpEmailValidate) {
+                if (authViewModel.state.signUpEmailValidate && authViewModel.state.signInPasswordLength > 8) {
                     authViewModel.onEvent(AuthEvent.SignUp)
                 }
             }) {

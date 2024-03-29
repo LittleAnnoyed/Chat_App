@@ -40,6 +40,7 @@ class AuthViewModel @Inject constructor(
 
             is AuthEvent.SignUpPasswordChanged -> {
                 state = state.copy(signUpPassword = event.value)
+                state = state.copy(signUpPasswordLength = event.value.length)
             }
 
             is AuthEvent.SignUpPasswordVisibilityChange -> {
@@ -56,6 +57,7 @@ class AuthViewModel @Inject constructor(
 
             is AuthEvent.SignInPasswordChanged -> {
                 state = state.copy(signInPassword = event.value)
+                state = state.copy(signInPasswordLength = event.value.length)
             }
 
             is AuthEvent.SignInPasswordVisibility -> {
@@ -127,10 +129,12 @@ data class AuthState(
     val signUpEmailValidate: Boolean = false,
     val signUpPassword: String = "",
     val signInPasswordVisibility: Boolean = false,
+    val signUpPasswordLength: Int = 0,
 
     val signInEmail: String = "",
     val signInEmailValidate: Boolean = false,
     val signInPassword: String = "",
+    val signInPasswordLength: Int = 0,
     val signUpPasswordVisibility: Boolean = false,
 )
 
