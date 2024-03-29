@@ -43,30 +43,31 @@ fun LoginScreen(
     val loginWrongMessage = stringResource(id = R.string.login_wrong_message)
     val unknownError = stringResource(id = R.string.unknown_error)
 
-    LaunchedEffect(key1 = authViewModel, key2 = context){
+    LaunchedEffect(key1 = authViewModel, key2 = context) {
         authViewModel.authResults.collect { result ->
-            when(result){
+            when (result) {
                 is AuthResult.Authorized -> {
-                    navController.navigate(Screen.HomeScreen.route){
-                        popUpTo(Screen.LoginScreen.route){
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.LoginScreen.route) {
                             inclusive = true
                         }
                     }
                 }
+
                 is AuthResult.DataNotSet -> {
-                    navController.navigate(Screen.SetDataScreen.route){
-                        popUpTo(Screen.LoginScreen.route){
+                    navController.navigate(Screen.SetDataScreen.route) {
+                        popUpTo(Screen.LoginScreen.route) {
                             inclusive = true
                         }
                     }
                 }
 
                 is AuthResult.Unauthorized -> {
-                    Toast.makeText(context,loginWrongMessage,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, loginWrongMessage, Toast.LENGTH_SHORT).show()
                 }
 
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context,unknownError,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, unknownError, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -127,7 +128,14 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
-            Button(onClick = { authViewModel.onEvent(AuthEvent.SignIn) }) {
+            Button(onClick = {
+                authViewModel.onEvent(AuthEvent.SignInEmailValidate)
+
+                if (authViewModel.state.signInEmailValidate) {
+                    authViewModel.onEvent(AuthEvent.SignIn)
+                }
+
+            }) {
                 Text(
                     text = stringResource(id = R.string.login),
                     color = MaterialTheme.colorScheme.onPrimary

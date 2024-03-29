@@ -45,16 +45,16 @@ fun RegisterScreen(
         authViewModel.authResults.collect { result ->
             when (result) {
                 is AuthResult.Authorized -> {
-                    navController.navigate(Screen.HomeScreen.route){
-                        popUpTo(Screen.RegisterScreen.route){
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.RegisterScreen.route) {
                             inclusive = true
                         }
                     }
                 }
 
                 is AuthResult.DataNotSet -> {
-                    navController.navigate(Screen.SetDataScreen.route){
-                        popUpTo(Screen.LoginScreen.route){
+                    navController.navigate(Screen.SetDataScreen.route) {
+                        popUpTo(Screen.LoginScreen.route) {
                             inclusive = true
                         }
                     }
@@ -128,7 +128,10 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.small))
 
             Button(onClick = {
-                authViewModel.onEvent(AuthEvent.SignUp)
+                authViewModel.onEvent(AuthEvent.SignUpEmailValidate)
+                if (authViewModel.state.signUpEmailValidate) {
+                    authViewModel.onEvent(AuthEvent.SignUp)
+                }
             }) {
                 Text(
                     text = stringResource(id = R.string.register),
