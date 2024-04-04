@@ -3,8 +3,12 @@ package com.example.chat_app.presentation.camera
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.core.ImageProxy
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Box
@@ -23,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import com.example.chat_app.R
 
 @Composable
@@ -89,7 +94,26 @@ fun capturePhoto(
     cameraController: LifecycleCameraController,
     onPhotoCaptured: (Bitmap) -> Unit
 ) {
-    TODO("Not yet implemented")
+
+    val mainExecutor = ContextCompat.getMainExecutor(context)
+
+    cameraController.takePicture(mainExecutor, object : ImageCapture.OnImageCapturedCallback() {
+
+        override fun onCaptureSuccess(image: ImageProxy) {
+            val correctedBitmap: Bitmap =image
+                .toBitmap()
+                .rotateBitmap(image.imageInfo.rotationDegrees)
+
+            onPhotoCaptured(correctedBitmap)
+            image.close()
+        }
+
+        override fun onError(exception: ImageCaptureException) {
+            Log.e("CameraScreen","Error capturing image",exception)
+        }
+
+
+    })
 }
 
 @Composable
