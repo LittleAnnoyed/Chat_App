@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.chat_app.R
+import com.example.chat_app.util.rotateBitmap
 
 @Composable
 fun CameraScreen() {
