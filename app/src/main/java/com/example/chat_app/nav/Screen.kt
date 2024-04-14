@@ -13,4 +13,6 @@ sealed class Screen(val route: String) {
 
     data object GroupCreateScreen: Screen("group_create_screen")
     data object GroupAddScreen: Screen("group_add_screen")
+
+    data object CameraScreen: Screen("camera_screen")
 }

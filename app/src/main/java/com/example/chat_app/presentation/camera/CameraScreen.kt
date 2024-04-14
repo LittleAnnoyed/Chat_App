@@ -41,9 +41,15 @@ import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.rotateBitmap
 
 @Composable
-fun CameraScreen() {
+fun CameraScreen(
+    onPhotoCaptured: (Bitmap) -> Unit,
+    capturedImage: Bitmap? = null
+) {
 
-    CameraContent()
+    CameraContent(
+        onPhotoCaptured = onPhotoCaptured,
+        lastCapturedPhoto = capturedImage
+    )
 }
 
 @Composable
