@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
@@ -43,6 +45,7 @@ import com.example.chat_app.component.RoundImage
 import com.example.chat_app.domain.result.SetUserDataResult
 import com.example.chat_app.nav.Screen
 import com.example.chat_app.presentation.camera.CameraScreen
+import com.example.chat_app.presentation.camera.startCamera
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.pickMediaLauncher
@@ -54,6 +57,7 @@ fun SetUserDataScreen(
     navController: NavController,
     viewModel: SetUserDataViewModel = hiltViewModel()
 ) {
+
 
     val context = LocalContext.current
     val activity = LocalContext.current as Activity
@@ -90,7 +94,10 @@ fun SetUserDataScreen(
 
         if (viewModel.uiState.cameraState) {
 
-            CameraScreen()
+            CameraScreen(
+                { viewModel.onEvent(SetUserDataEvent.OnUserImageChanged(it)) },
+                viewModel.state.userImageUri
+            )
 
         } else {
 
@@ -140,8 +147,12 @@ fun ChooseImageDialog(
     context: Context,
     activity: Activity,
     pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri>,
-    viewModel: SetUserDataViewModel
+    viewModel: SetUserDataViewModel,
+    previewView: PreviewView
 ) {
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+
     AlertDialog(
         modifier = Modifier.fillMaxSize(0.6f),
         onDismissRequest = { }) {
@@ -164,6 +175,7 @@ fun ChooseImageDialog(
             Icon(painter = painterResource(id = R.drawable.camera), contentDescription = null,
                 modifier = Modifier.clickable {
                     viewModel.onEvent(SetUserDataEvent.OpenCamera)
+                    startCamera(context, lifecycleOwner, previewView)
                 })
         }
     }
