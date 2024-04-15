@@ -45,3 +45,60 @@ import com.example.chat_app.R
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.rotateBitmap
 
+@Composable
+fun CameraScreen(
+) {
+    val previewView = PreviewView(LocalContext.current)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        AndroidView(factory = { context ->
+            previewView.apply {
+                implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+            }
+        })
+
+        //todo add content desc
+        Icon(
+            painter = painterResource(id = R.drawable.camera),
+            contentDescription = null
+        )
+    }
+}
+
+fun startCamera(
+    context: Context,
+    lifecycleOwner: LifecycleOwner,
+    previewView: PreviewView
+) {
+
+    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
+
+    cameraProviderFuture.addListener({
+
+        val cameraProvider = cameraProviderFuture.get()
+
+        val preview = Preview.Builder()
+            .build()
+            .also {
+                it.setSurfaceProvider(previewView.surfaceProvider)
+            }
+
+        val imageCapture = ImageCapture.Builder()
+            .build()
+
+        val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+        try {
+
+            cameraProvider.unbindAll()
+            cameraProvider.bindToLifecycle(
+                lifecycleOwner, cameraSelector, preview, imageCapture
+            )
+        } catch (exc: Exception) {
+            Log.e("Camera",exc.toString())
+        }
+
+    }, ContextCompat.getMainExecutor(context))
+
+}

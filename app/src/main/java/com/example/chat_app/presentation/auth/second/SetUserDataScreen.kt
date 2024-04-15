@@ -42,6 +42,7 @@ import com.example.chat_app.R
 import com.example.chat_app.component.RoundImage
 import com.example.chat_app.domain.result.SetUserDataResult
 import com.example.chat_app.nav.Screen
+import com.example.chat_app.presentation.camera.CameraScreen
 import com.example.chat_app.ui.sizes
 import com.example.chat_app.ui.spacing
 import com.example.chat_app.util.pickMediaLauncher
@@ -87,41 +88,48 @@ fun SetUserDataScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        RoundImage(
-            modifier = Modifier
-                .size(MaterialTheme.sizes.bigRoundImageSize)
-                .clickable {
-                    requestImagePermission(context, activity)
-                    pickMedia
-                        .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                },
-            imageUri = viewModel.state.userImageUri,
-            contentDescription = stringResource(id = R.string.user_image)
-        )
+        if (viewModel.uiState.cameraState) {
 
-        Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
+            CameraScreen()
 
-        TextField(
-            value = viewModel.state.username,
-            onValueChange = { viewModel.onEvent(SetUserDataEvent.OnUsernameChanged(it)) },
-            label = {
-                Text(
-                    text = stringResource(id = R.string.username),
-                    color = MaterialTheme.colorScheme.onTertiaryContainer
-                )
-            },
-            colors = TextFieldDefaults.colors(
-                unfocusedTextColor = MaterialTheme.colorScheme.onSecondary,
-                focusedTextColor = MaterialTheme.colorScheme.onSecondary,
-                focusedContainerColor = MaterialTheme.colorScheme.tertiary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.tertiary
+        } else {
+
+            RoundImage(
+                modifier = Modifier
+                    .size(MaterialTheme.sizes.bigRoundImageSize)
+                    .clickable {
+                        requestImagePermission(context, activity)
+                        pickMedia
+                            .launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    },
+                imageUri = viewModel.state.userImageUri,
+                contentDescription = stringResource(id = R.string.user_image)
             )
-        )
 
-        Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
+            Spacer(modifier = Modifier.padding(vertical = MaterialTheme.spacing.medium))
 
-        Button(onClick = { viewModel.onEvent(SetUserDataEvent.SendUserData) }) {
-            Text(text = stringResource(id = R.string.send))
+            TextField(
+                value = viewModel.state.username,
+                onValueChange = { viewModel.onEvent(SetUserDataEvent.OnUsernameChanged(it)) },
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.username),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSecondary,
+                    focusedTextColor = MaterialTheme.colorScheme.onSecondary,
+                    focusedContainerColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.tertiary
+                )
+            )
+
+            Spacer(modifier = Modifier.height(height = MaterialTheme.spacing.small))
+
+            Button(onClick = { viewModel.onEvent(SetUserDataEvent.SendUserData) }) {
+                Text(text = stringResource(id = R.string.send))
+            }
         }
     }
 }
@@ -131,8 +139,8 @@ fun SetUserDataScreen(
 fun ChooseImageDialog(
     context: Context,
     activity: Activity,
-    pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest,Uri>,
-    navController: NavController
+    pickMedia: ManagedActivityResultLauncher<PickVisualMediaRequest, Uri>,
+    viewModel: SetUserDataViewModel
 ) {
     AlertDialog(
         modifier = Modifier.fillMaxSize(0.6f),
@@ -155,7 +163,7 @@ fun ChooseImageDialog(
             Spacer(modifier = Modifier.padding(start = MaterialTheme.spacing.small))
             Icon(painter = painterResource(id = R.drawable.camera), contentDescription = null,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.CameraScreen.route)
+                    viewModel.onEvent(SetUserDataEvent.OpenCamera)
                 })
         }
     }

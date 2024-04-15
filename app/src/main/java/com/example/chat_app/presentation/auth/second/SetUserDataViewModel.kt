@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chat_app.data.repository.AuthRepository
 import com.example.chat_app.domain.result.SetUserDataResult
+import com.example.chat_app.presentation.camera.startCamera
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -21,6 +22,7 @@ class SetUserDataViewModel @Inject constructor(
 ) : ViewModel() {
 
     var state by mutableStateOf(SetUserDataState())
+    var uiState by mutableStateOf(SetUserDataUiState())
 
     private val resultChannel = Channel<SetUserDataResult<Unit>>()
     var authResults = resultChannel.receiveAsFlow()
@@ -35,6 +37,9 @@ class SetUserDataViewModel @Inject constructor(
             }
             is SetUserDataEvent.SendUserData -> {
                 sendUserData()
+            }
+            is SetUserDataEvent.OpenCamera -> {
+                uiState = uiState.copy(cameraState = true)
             }
         }
     }
@@ -52,9 +57,14 @@ data class SetUserDataState(
     val userImageUri: Uri = Uri.EMPTY,
 )
 
+data class SetUserDataUiState(
+    val cameraState: Boolean = false
+)
+
 sealed class SetUserDataEvent {
 
     data class OnUsernameChanged(val value: String): SetUserDataEvent()
     data class OnUserImageChanged(val value: Uri): SetUserDataEvent()
+    data object OpenCamera : SetUserDataEvent()
     data object SendUserData: SetUserDataEvent()
 }
